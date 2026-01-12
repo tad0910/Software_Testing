@@ -15,7 +15,7 @@ Repo này chứa các bài tập thực hành và báo cáo kết quả kiểm t
 - **Điểm số đạt được:** 7930
 
 ### 3. Ảnh minh chứng
-![Kết quả Cantunsee]("C:\Users\Admin\Pictures\Screenshots\Cantunsee.png")
+![Kết quả Cantunsee](./images/ket-qua-cantunsee.png)
 
 ---
 
@@ -30,8 +30,8 @@ Dự án này bao gồm class `StudentAnalyzer` để xử lý danh sách điể
 - `calculateValidAverage`: Tính điểm trung bình của các điểm hợp lệ.
 
 ### 3. Cấu trúc thư mục
-- `src/`: Chứa mã nguồn Java.
-- `test/`: Chứa mã nguồn kiểm thử.
+* `unit-test/src/`: Chứa mã nguồn Java.
+* `unit-test/test/`: Chứa mã nguồn kiểm thử.
 
 ### 4. Cách chạy kiểm thử
 - **Yêu cầu:** JDK 8+ và thư viện JUnit 5.
