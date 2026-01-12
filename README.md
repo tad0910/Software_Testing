@@ -1,4 +1,4 @@
-# Báo cáo Thực hành Kiểm thử Phần mềm (Software Testing)
+# Báo cáo Thực hành Kiểm thử Phần mềm 
 
 Repo này chứa các bài tập thực hành và báo cáo kết quả kiểm thử phần mềm.
 
