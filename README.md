@@ -124,7 +124,9 @@ Mở Terminal tại thư mục gốc của dự án và thực hiện các lện
 ### 4. Kết quả kiểm thử (Evidence)
 
 **Kết quả kịch bản Đăng nhập:**
+
 ![Kết quả Login](./cypress-exercise/evidence/login-test-result.png)
 
 **Kết quả kịch bản Giỏ hàng & Thanh toán:**
+
 ![Kết quả Cart & Checkout](./cypress-exercise/evidence/cart-checkout-result.png)
