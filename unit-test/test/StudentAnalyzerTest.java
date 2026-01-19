@@ -52,8 +52,43 @@ public class StudentAnalyzerTest {
 
     @Test
     public void testCalculateValidAverage_AllInvalid() {
-        // Nếu toàn bộ điểm không hợp lệ, không thể chia cho 0
-        List<Double> scores = Arrays.asList(-1.0, 20.0);
+        // Nếu toàn bộ điểm không hợp lệ (Negative), không thể chia cho 0
+        List<Double> scores = Arrays.asList(-1.0, -5.0);
+        assertEquals(0.0, analyzer.calculateValidAverage(scores), 0.001);
+    }
+
+    // --- Bổ sung Test Case theo Phân hoạch Tương đương ---
+
+    @Test
+    public void testCountExcellentStudents_NullInput() {
+        // Lớp tương đương: Null Input -> Return 0
+        assertEquals(0, analyzer.countExcellentStudents(null), "Input null phải trả về 0");
+    }
+
+    @Test
+    public void testCountExcellentStudents_InvalidScores_Negative() {
+        // Lớp tương đương: Điểm < 0 -> Bỏ qua
+        List<Double> scores = Arrays.asList(-1.0, -10.0, -0.1);
+        assertEquals(0, analyzer.countExcellentStudents(scores));
+    }
+
+    @Test
+    public void testCountExcellentStudents_InvalidScores_GreaterThan10() {
+        // Lớp tương đương: Điểm > 10 -> Bỏ qua
+        List<Double> scores = Arrays.asList(10.1, 100.0, 11.0);
+        assertEquals(0, analyzer.countExcellentStudents(scores));
+    }
+
+    @Test
+    public void testCalculateValidAverage_NullInput() {
+        // Lớp tương đương: Null Input -> Return 0.0
+        assertEquals(0.0, analyzer.calculateValidAverage(null), 0.001, "Input null phải trả về 0.0");
+    }
+
+    @Test
+    public void testCalculateValidAverage_InvalidScores_GreaterThan10() {
+        // Lớp tương đương: Điểm > 10 -> Bỏ qua
+        List<Double> scores = Arrays.asList(10.1, 15.0);
         assertEquals(0.0, analyzer.calculateValidAverage(scores), 0.001);
     }
 }
