@@ -104,4 +104,58 @@ public class StudentAnalyzerTest {
         List<Double> scores = Arrays.asList(8.0, null, 8.0); // T.bình = 8.0
         assertEquals(8.0, analyzer.calculateValidAverage(scores), 0.001);
     }
+
+    // --- Bổ sung Test Case BVA (High Precision) ---
+
+    // --- Helper Methods to reduce duplication ---
+
+    private void assertExcellentCount(double score, int expectedCount) {
+        List<Double> scores = Collections.singletonList(score);
+        assertEquals(expectedCount, analyzer.countExcellentStudents(scores), "Failed at score: " + score);
+    }
+
+    private void assertAverage(List<Double> scores, double expectedAvg) {
+        assertEquals(expectedAvg, analyzer.calculateValidAverage(scores), 0.001, "Average mismatch");
+    }
+
+    // --- Refactored & New BVA Tests ---
+
+    @Test
+    public void testCountExcellentStudents_BoundaryPrecision() {
+        // Refactored to use helper method
+        assertExcellentCount(7.9999, 0); // Just below 8
+        assertExcellentCount(8.0001, 1); // Just above 8
+        assertExcellentCount(10.0001, 0); // Just above 10 (Invalid)
+        assertExcellentCount(-0.0001, 0); // Just below 0 (Invalid)
+    }
+
+    @Test
+    public void testCalculateValidAverage_BoundaryPrecision() {
+        // BVA High Precision for Average
+
+        // 1. Boundary 0.0
+        // -0.0001 -> Invalid (Ignored) -> Average 0.0 (empty valid list)
+        assertAverage(Arrays.asList(-0.0001), 0.0);
+
+        // 0.0 -> Valid -> Average 0.0
+        assertAverage(Arrays.asList(0.0), 0.0);
+
+        // 0.0001 -> Valid -> Average 0.0001
+        assertAverage(Arrays.asList(0.0001), 0.0001);
+
+        // 2. Boundary 10.0
+        // 10.0 -> Valid -> Average 10.0
+        assertAverage(Arrays.asList(10.0), 10.0);
+
+        // 9.9999 -> Valid -> Average 9.9999
+        assertAverage(Arrays.asList(9.9999), 9.9999);
+
+        // 10.0001 -> Invalid (Ignored) -> Average 0.0
+        assertAverage(Arrays.asList(10.0001), 0.0);
+
+        // Mixed Boundary Case
+        // 0.0 (Valid) + 10.0 (Valid) + -0.0001 (Ignored) + 10.0001 (Ignored)
+        // Sum = 10.0, Count = 2 => Avg = 5.0
+        assertAverage(Arrays.asList(0.0, 10.0, -0.0001, 10.0001), 5.0);
+    }
 }
