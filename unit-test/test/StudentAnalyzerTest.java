@@ -8,11 +8,11 @@ public class StudentAnalyzerTest {
 
     private final StudentAnalyzer analyzer = new StudentAnalyzer();
 
-
     @Test
     public void testCountExcellentStudents_NormalCase() {
         List<Double> scores = Arrays.asList(9.0, 8.5, 7.0, 11.0, -1.0, 8.0);
-        assertEquals(3, analyzer.countExcellentStudents(scores), "Phải đếm đúng số lượng học sinh giỏi bỏ qua điểm sai");
+        assertEquals(3, analyzer.countExcellentStudents(scores),
+                "Phải đếm đúng số lượng học sinh giỏi bỏ qua điểm sai");
     }
 
     @Test
@@ -42,7 +42,8 @@ public class StudentAnalyzerTest {
         // Số lượng: 3
         // Trung bình: 24.5 / 3 = 8.16666...
         List<Double> scores = Arrays.asList(9.0, 8.5, 7.0, 11.0, -1.0);
-        assertEquals(8.17, analyzer.calculateValidAverage(scores), 0.01, "Tính trung bình phải chính xác với sai số 0.01");
+        assertEquals(8.17, analyzer.calculateValidAverage(scores), 0.01,
+                "Tính trung bình phải chính xác với sai số 0.01");
     }
 
     @Test
@@ -56,8 +57,6 @@ public class StudentAnalyzerTest {
         List<Double> scores = Arrays.asList(-1.0, -5.0);
         assertEquals(0.0, analyzer.calculateValidAverage(scores), 0.001);
     }
-
-    // --- Bổ sung Test Case theo Phân hoạch Tương đương ---
 
     @Test
     public void testCountExcellentStudents_NullInput() {
@@ -90,5 +89,19 @@ public class StudentAnalyzerTest {
         // Lớp tương đương: Điểm > 10 -> Bỏ qua
         List<Double> scores = Arrays.asList(10.1, 15.0);
         assertEquals(0.0, analyzer.calculateValidAverage(scores), 0.001);
+    }
+
+    @Test
+    public void testCountExcellentStudents_ListWithNullElement() {
+        // Robustness: List chứa phần tử null -> Bỏ qua phần tử đó, không crash
+        List<Double> scores = Arrays.asList(8.0, null, 9.0);
+        assertEquals(2, analyzer.countExcellentStudents(scores), "Phải bỏ qua phần tử null trong list");
+    }
+
+    @Test
+    public void testCalculateValidAverage_ListWithNullElement() {
+        // Robustness: List chứa phần tử null -> Bỏ qua
+        List<Double> scores = Arrays.asList(8.0, null, 8.0); // T.bình = 8.0
+        assertEquals(8.0, analyzer.calculateValidAverage(scores), 0.001);
     }
 }
