@@ -98,3 +98,27 @@ Mở Terminal tại thư mục gốc của dự án và thực hiện các lện
 **Kết quả kịch bản Giỏ hàng & Thanh toán:**
 
 ![Kết quả Cart & Checkout](./cypress-exercise/evidence/cart-checkout-result.png)
+
+## Phần 4: Báo cáo Áp dụng Kỹ thuật Kiểm thử Hộp đen
+Dưới đây là tổng hợp kết quả áp dụng 3 kỹ thuật kiểm thử hộp đen vào chức năng phân tích điểm học sinh (`StudentAnalyzer`).
+
+### 1. Kỹ thuật Phân hoạch Tương đương (Equivalence Partitioning - EP)
+Chia miền giá trị đầu vào thành các lớp tương đương để giảm số lượng test case cần thiết mà vẫn đảm bảo độ bao phủ.
+*   **Lớp hợp lệ (Valid):** `0.0 <= score <= 10.0`
+*   **Lớp không hợp lệ (Invalid):** `score < 0.0` hoặc `score > 10.0`
+*   **Lớp đặc biệt:** Input là `null` hoặc danh sách rỗng (Empty List).
+*   **Kết quả:** Đã phát hiện và xử lý thành công các trường hợp đầu vào ngoại lệ (Null/Empty Loop) để tránh lỗi Runtime.
+
+### 2. Kỹ thuật Phân tích Giá trị Biên (Boundary Value Analysis - BVA)
+Tập trung kiểm thử tại các điểm biên của miền giá trị, nơi dễ xảy ra lỗi nhất.
+*   **Các biên quan trọng:** `0.0`, `8.0` (mốc Giỏi), `10.0`.
+*   **Độ chính xác cao (High Precision):** Kiểm thử cả các giá trị lân cận (`epsilon`) để đảm bảo logic so sánh (`>=`) hoạt động chính xác tuyệt đối.
+    *   Ví dụ: `7.9999` (Không giỏi), `8.0001` (Giỏi), `10.0001` (Invalid).
+
+### 3. Kỹ thuật Bảng Quyết Định (Decision Table Testing)
+Sử dụng để kiểm thử các tổ hợp điều kiện logic phức tạp.
+*   **Quy tắc (Rules):** Thiết lập bảng quy tắc xử lý cho các trường hợp: (1) List Null, (2) List Empty, (3) List chứa phần tử Null, (4) List chứa giá trị Invalid xen kẽ Valid.
+*   **Kết quả:** Đảm bảo tính "Robustness" (Độ bền vững) của hệ thống. Chương trình có khả năng tự loại bỏ các giá trị "rác" (Null/Invalid) trong một danh sách hỗn hợp và tính toán đúng trên các giá trị còn lại.
+
+---
+*(Xem chi tiết code kiểm thử tại `unit-test/test/StudentAnalyzerTest.java`)*
