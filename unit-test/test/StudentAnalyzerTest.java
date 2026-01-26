@@ -147,16 +147,45 @@ public class StudentAnalyzerTest {
     // ==================================================================================
 
     @Test
-    public void testCountExcellentStudents_ListWithNullElement() {
-        // DT Rule: Element is Null -> Ignore (Skip)
-        List<Double> scores = Arrays.asList(8.0, null, 9.0);
-        assertEquals(2, analyzer.countExcellentStudents(scores), "Phải bỏ qua phần tử null trong list");
+    public void testDecisionTable_MixedRules_ComplexScenario() {
+        // Test case này kết hợp tất cả các Rule (R2, R3, R4, R5) trong cùng 1 danh sách
+        // để đảm bảo logic lọc (filter) hoạt động đúng khi các điều kiện xen kẽ nhau.
+
+        List<Double> mixedScores = Arrays.asList(
+                null, // Rule 2: Null element -> Skip
+                9.0, // Rule 5: Excellent -> Count + Sum
+                -5.0, // Rule 3: Invalid Low -> Skip
+                7.5, // Rule 4: Normal -> Sum only
+                15.0, // Rule 3: Invalid High -> Skip
+                8.0, // Rule 5: Excellent (Boundary) -> Count + Sum
+                null // Rule 2: Null element -> Skip
+        );
+
+        // Phân tích mong đợi:
+        // Valid values: 9.0, 7.5, 8.0
+        // Excellent values: 9.0, 8.0 (Total: 2)
+        // Sum: 9.0 + 7.5 + 8.0 = 24.5
+        // Count valid: 3
+        // Average: 24.5 / 3 = 8.1666...
+
+        // Verify countExcellentStudents
+        assertEquals(2, analyzer.countExcellentStudents(mixedScores),
+                "DT Failed: Phải xử lý đúng danh sách hỗn hợp (Null, Invalid, Valid, Excellent)");
+
+        // Verify calculateValidAverage
+        assertEquals(8.167, analyzer.calculateValidAverage(mixedScores), 0.01,
+                "DT Failed: Tính trung bình sai khi danh sách chứa nhiều loại dữ liệu rác");
     }
 
     @Test
-    public void testCalculateValidAverage_ListWithNullElement() {
-        // DT Rule: Element is Null -> Ignore (Skip)
-        List<Double> scores = Arrays.asList(8.0, null, 8.0);
-        assertEquals(8.0, analyzer.calculateValidAverage(scores), 0.001);
+    public void testDecisionTable_Rule_AllElementsSkipped() {
+        // Trường hợp đặc biệt: List không rỗng, nhưng TẤT CẢ phần tử đều rơi vào Rule
+        // Skip (Null hoặc Invalid)
+        // Hệ thống không được crash (chia cho 0) và phải trả về default.
+
+        List<Double> allSkipped = Arrays.asList(null, -1.0, 11.0, null);
+
+        assertEquals(0, analyzer.countExcellentStudents(allSkipped));
+        assertEquals(0.0, analyzer.calculateValidAverage(allSkipped), 0.001);
     }
 }
