@@ -19,33 +19,24 @@ Repo này chứa các bài tập thực hành và báo cáo kết quả kiểm t
 
 ---
 
-## Phần 2: Bài tập thực hành kiểm thử với JUnit
-**Chủ đề:** Phân tích dữ liệu điểm số học sinh
+## Phần 2: Bài tập thực hành kiểm thử với JUnit 5
+**Chủ đề:** Phân tích dữ liệu điểm số học sinh (`StudentAnalyzer`)
 
-### 1. Giới thiệu
-Dự án này bao gồm class `StudentAnalyzer` để xử lý danh sách điểm số học sinh và các unit test tương ứng sử dụng JUnit 5.
+### 1. Tổng quan dự án
+Class `StudentAnalyzer` cung cấp các chức năng xử lý danh sách điểm số:
+- `countExcellentStudents`: Đếm số học sinh giỏi (>= 8.0), có cơ chế lọc dữ liệu rác.
+- `calculateValidAverage`: Tính điểm trung bình trên các điểm hợp lệ.
 
-### 2. Chức năng chính
-- `countExcellentStudents`: Đếm số học sinh giỏi (>= 8.0), bỏ qua các điểm không hợp lệ (<0 hoặc >10).
-- `calculateValidAverage`: Tính điểm trung bình của các điểm hợp lệ.
+### 2. Cấu trúc thư mục
+* `unit-test/src/`: Mã nguồn Java (`StudentAnalyzer.java`).
+* `unit-test/test/`: Mã nguồn kiểm thử (`StudentAnalyzerTest.java`).
 
-### 3. Cấu trúc thư mục
-* `unit-test/src/`: Chứa mã nguồn Java.
-* `unit-test/test/`: Chứa mã nguồn kiểm thử.
+### 3. Kết quả Code Coverage
+Độ bao phủ đạt tuyệt đối **100%** cho tất cả các chỉ số (Instruction, Branch, Line), đảm bảo mọi logic rẽ nhánh đều đã được kiểm tra.
 
-### 4. Cách chạy kiểm thử
-- **Yêu cầu:** JDK 8+ và thư viện JUnit 5.
-- **Thực hiện:** Chạy trực tiếp trên IDE (IntelliJ/Eclipse/VS Code) bằng cách click chuột phải vào file `StudentAnalyzerTest.java` và chọn **Run**.
-
-### 5. Kết quả
-![Kết quả chạy JUnit](./images/ket-qua-junit.png)
-
-### 6. Kết quả Code Coverage
-Đã thực hiện đo lường độ bao phủ mã nguồn (Code Coverage) cho class `StudentAnalyzer`. Kết quả đạt độ bao phủ tuyệt đối:
-
-| Element | Class, % | Method, % | Line, % | Branch, % |
+| Element | Class | Method | Line | Branch |
 | :--- | :--- | :--- | :--- | :--- |
-| **StudentAnalyzer** | 100% (1/1) | 100% (2/2) | 100% (19/19) | 100% (24/24) |
+| **StudentAnalyzer** | 100% | 100% | 100% | 100% |
 
 ![Kết quả Coverage](./images/coverage-result.png)
 
@@ -70,55 +61,59 @@ Dự án bao gồm 2 file kiểm thử chính nằm trong thư mục `cypress/e2
     * ✅ Xóa sản phẩm khỏi giỏ hàng.
     * ✅ Thực hiện quy trình thanh toán đầy đủ (Checkout Flow): Giỏ hàng -> Điền thông tin -> Xác nhận -> Hoàn tất.
 
-### 3. Cách cài đặt và chạy
-Mở Terminal tại thư mục gốc của dự án và thực hiện các lệnh sau:
-
-1.  **Di chuyển vào thư mục bài tập:**
-    ```bash
-    cd cypress-exercise
-    ```
-
-2.  **Cài đặt các thư viện (nếu chưa có):**
-    ```bash
-    npm install
-    ```
-
-3.  **Mở giao diện Cypress:**
-    ```bash
-    npx cypress open
-    ```
-    *Chọn **E2E Testing** -> Chọn trình duyệt (Chrome/Electron) -> Click vào file spec muốn chạy.*
-
-### 4. Kết quả kiểm thử (Evidence)
-
+### 3. Kết quả kiểm thử (Evidence)
 **Kết quả kịch bản Đăng nhập:**
-
 ![Kết quả Login](./cypress-exercise/evidence/login-test-result.png)
 
 **Kết quả kịch bản Giỏ hàng & Thanh toán:**
-
 ![Kết quả Cart & Checkout](./cypress-exercise/evidence/cart-checkout-result.png)
 
-## Phần 4: Báo cáo Áp dụng Kỹ thuật Kiểm thử Hộp đen
-Dưới đây là tổng hợp kết quả áp dụng 3 kỹ thuật kiểm thử hộp đen vào chức năng phân tích điểm học sinh (`StudentAnalyzer`).
-
-### 1. Kỹ thuật Phân hoạch Tương đương (Equivalence Partitioning - EP)
-Chia miền giá trị đầu vào thành các lớp tương đương để giảm số lượng test case cần thiết mà vẫn đảm bảo độ bao phủ.
-*   **Lớp hợp lệ (Valid):** `0.0 <= score <= 10.0`
-*   **Lớp không hợp lệ (Invalid):** `score < 0.0` hoặc `score > 10.0`
-*   **Lớp đặc biệt:** Input là `null` hoặc danh sách rỗng (Empty List).
-*   **Kết quả:** Đã phát hiện và xử lý thành công các trường hợp đầu vào ngoại lệ (Null/Empty Loop) để tránh lỗi Runtime.
-
-### 2. Kỹ thuật Phân tích Giá trị Biên (Boundary Value Analysis - BVA)
-Tập trung kiểm thử tại các điểm biên của miền giá trị, nơi dễ xảy ra lỗi nhất.
-*   **Các biên quan trọng:** `0.0`, `8.0` (mốc Giỏi), `10.0`.
-*   **Độ chính xác cao (High Precision):** Kiểm thử cả các giá trị lân cận (`epsilon`) để đảm bảo logic so sánh (`>=`) hoạt động chính xác tuyệt đối.
-    *   Ví dụ: `7.9999` (Không giỏi), `8.0001` (Giỏi), `10.0001` (Invalid).
-
-### 3. Kỹ thuật Bảng Quyết Định (Decision Table Testing)
-Sử dụng để kiểm thử các tổ hợp điều kiện logic phức tạp.
-*   **Quy tắc (Rules):** Thiết lập bảng quy tắc xử lý cho các trường hợp: (1) List Null, (2) List Empty, (3) List chứa phần tử Null, (4) List chứa giá trị Invalid xen kẽ Valid.
-*   **Kết quả:** Đảm bảo tính "Robustness" (Độ bền vững) của hệ thống. Chương trình có khả năng tự loại bỏ các giá trị "rác" (Null/Invalid) trong một danh sách hỗn hợp và tính toán đúng trên các giá trị còn lại.
-
 ---
-*(Xem chi tiết code kiểm thử tại `unit-test/test/StudentAnalyzerTest.java`)*
+
+## Phần 4: Chi tiết Kỹ thuật Kiểm thử Hộp đen (Black-box Testing)
+*Phần này phân tích chi tiết cách áp dụng các kỹ thuật kiểm thử vào dự án JUnit (StudentAnalyzer) ở Phần 2.*
+
+### 1. Phân hoạch Tương đương (Equivalence Partitioning - EP)
+Chia miền dữ liệu thành các lớp tương đương để đại diện cho các trường hợp Valid và Invalid.
+
+| Lớp (Class) | Dữ liệu Test (Input) | Kết quả Mong đợi | Tên hàm Test |
+| :--- | :--- | :--- | :--- |
+| **Valid (Happy Path)** | `[9.0, 8.5, 7.0]` | Count: 2 | `testCountExcellentStudents_NormalCase` |
+| **Invalid (Negative)** | `[-1.0, -10.0]` | Count: 0 (Ignore) | `testCountExcellentStudents_InvalidScores_Negative` |
+| **Invalid (Overflow)** | `[10.1, 100.0]` | Count: 0 (Ignore) | `testCountExcellentStudents_InvalidScores_GreaterThan10` |
+| **Special (Null/Empty)** | `null` hoặc `[]` | Return 0 | `testCountExcellentStudents_NullInput` |
+
+### 2. Phân tích Giá trị Biên (Boundary Value Analysis - BVA)
+Kiểm thử tập trung tại các điểm biên `0.0`, `8.0`, `10.0` với độ chính xác cao (`epsilon`).
+
+| Điểm biên | Giá trị Test | Ý nghĩa | Kết quả Mong đợi |
+| :--- | :--- | :--- | :--- |
+| **Min Valid** | `0.0` | Hợp lệ thấp nhất | Được tính vào Average |
+| **Just Below Excellent** | `7.9999` | Sát ngưỡng giỏi | KHÔNG đếm là Giỏi |
+| **Excellent Threshold** | `8.0` | Ngưỡng giỏi | Đếm là Giỏi |
+| **Just Above Excellent** | `8.0001` | Trên ngưỡng giỏi | Đếm là Giỏi |
+| **Max Valid** | `10.0` | Hợp lệ cao nhất | Đếm là Giỏi |
+| **Invalid Boundary** | `10.0001` | Vừa chớm Invalid | Bị loại bỏ (Skip) |
+
+👉 **Hàm test:** `testCountExcellentStudents_BoundaryPrecision`, `testCalculateValidAverage_BoundaryPrecision`.
+
+### 3. Bảng Quyết Định (Decision Table Testing) - *Nâng cao*
+Kiểm thử các quy tắc logic (Business Rules) khi xử lý một danh sách hỗn hợp nhiều loại dữ liệu.
+
+**Bảng Logic (Rules Definition):**
+* **R1:** Input là Null/Empty ➡ Return Default.
+* **R2:** Phần tử là Null ➡ Skip.
+* **R3:** Phần tử Invalid (<0 hoặc >10) ➡ Skip.
+* **R4:** Phần tử Valid (<8) ➡ Tính Average, không tính Excellent.
+* **R5:** Phần tử Excellent (>=8) ➡ Tính Average, tính Excellent.
+
+**Kịch bản kiểm thử tích hợp (Mixed Scenario):**
+Input hỗn hợp: `[null, 9.0 (R5), -5.0 (R3), 7.5 (R4), 15.0 (R3), 8.0 (R5), null (R2)]`
+
+✅ **Kết quả thực thi:**
+- Hệ thống tự động lọc bỏ các giá trị `null`, `-5.0`, `15.0`.
+- Tính toán trên các giá trị sạch: `9.0`, `7.5`, `8.0`.
+- **Excellent Count:** 2
+- **Valid Average:** 8.167
+
+👉 **Hàm test:** `testDecisionTable_MixedRules_ComplexScenario`
