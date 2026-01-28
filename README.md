@@ -117,3 +117,47 @@ Input hỗn hợp: `[null, 9.0 (R5), -5.0 (R3), 7.5 (R4), 15.0 (R3), 8.0 (R5), n
 - **Valid Average:** 8.167
 
 👉 **Hàm test:** `testDecisionTable_MixedRules_ComplexScenario`
+
+### 4. Đồ thị dòng điều khiển (Control Flow Graph - CFG)
+Dưới đây là sơ đồ CFG cho hàm `calculateValidAverage` để minh chứng cho việc bao phủ các luồng logic:
+
+```mermaid
+graph TD
+    N1{Node 1: scores == null/empty?} 
+    N1 -- True --> N2[Node 2: return 0.0]
+    N1 -- False --> N3[Node 3: Init sum=0, vCount=0]
+    N3 --> N4{Node 4: For each score?}
+    N4 -- Has Element --> N5{Node 5: score == null?}
+    N5 -- True --> N6[Node 6: continue]
+    N6 --> N4
+    N5 -- False --> N7{Node 7: 0 <= score <= 10?}
+    N7 -- True --> N8[Node 8: sum += score, vCount++]
+    N8 --> N4
+    N7 -- False --> N4
+    N4 -- End Loop --> N9{Node 9: vCount == 0?}
+    N9 -- True --> N10[Node 10: return 0.0]
+    N9 -- False --> N11[Node 11: return sum / vCount]
+
+```
+
+### Phần 5: Chi tiết Kỹ thuật Kiểm thử Hộp trắng (White-box Testing)
+*Phần này phân tích cấu trúc mã nguồn thông qua đồ thị và luồng dữ liệu của hàm `calculateValidAverage`.*
+
+### 1. Phân tích Đồ thị dòng điều khiển (CFG)
+Dựa trên sơ đồ Mermaid ở Phần 4, các Test Case đã bao phủ các nhánh chính như sau:
+- **Path 1-2:** Bao phủ bởi `testCalculateValidAverage_NullInput`.
+- **Path 5-6-4:** Kiểm tra xử lý phần tử `null`, bao phủ bởi `testDecisionTable_MixedRules_ComplexScenario`.
+- **Path 7-8-4:** Nhánh tính toán điểm hợp lệ, bao phủ bởi `testCalculateValidAverage_NormalCase`.
+- **Path 9-10:** Nhánh phòng tránh lỗi chia cho 0, bao phủ bởi `testCalculateValidAverage_AllInvalid`.
+
+### 2. Phân tích Dòng dữ liệu (Data Flow Graph - DFG)
+Tập trung kiểm soát vòng đời của biến then chốt: `validCount`.
+
+| Cặp Def-Use | Vị trí (Dòng) | Loại Use | Test Case bao phủ |
+| :--- | :--- | :--- | :--- |
+| **Def** (vCount = 0) | 36 | Khởi tạo | Mọi test case |
+| **Def -> Use** | 36 -> 46 | **p-use** (Cập nhật) | `testCalculateValidAverage_NormalCase` |
+| **Def -> Use** | 36 -> 50 | **c-use** (Logic) | `testCalculateValidAverage_AllInvalid` |
+| **Def -> Use** | 46 -> 54 | **c-use** (Tính toán) | `testCalculateValidAverage_NormalCase` |
+
+**Kết luận:** Việc kết hợp CFG và DFG giúp đảm bảo mã nguồn không có "điểm chết" (Unreachable code) và các biến luôn được sử dụng một cách hợp lý trước khi trả về kết quả.
