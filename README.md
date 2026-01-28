@@ -97,26 +97,24 @@ Kiểm thử tập trung tại các điểm biên `0.0`, `8.0`, `10.0` với đ�
 
 👉 **Hàm test:** `testCountExcellentStudents_BoundaryPrecision`, `testCalculateValidAverage_BoundaryPrecision`.
 
-### 3. Bảng Quyết Định (Decision Table Testing) - *Nâng cao*
-Kiểm thử các quy tắc logic (Business Rules) khi xử lý một danh sách hỗn hợp nhiều loại dữ liệu.
+### 3. Bảng Quyết Định (Decision Table Testing)
+Kỹ thuật này được sử dụng để xác định hành vi của hệ thống đối với từng loại trạng thái dữ liệu đầu vào.
 
-**Bảng Logic (Rules Definition):**
-* **R1:** Input là Null/Empty ➡ Return Default.
-* **R2:** Phần tử là Null ➡ Skip.
-* **R3:** Phần tử Invalid (<0 hoặc >10) ➡ Skip.
-* **R4:** Phần tử Valid (<8) ➡ Tính Average, không tính Excellent.
-* **R5:** Phần tử Excellent (>=8) ➡ Tính Average, tính Excellent.
+| Trạng thái input | Trong [0, 10] | Trong [8, 10] | Ảnh hưởng trung bình | Đếm giỏi |
+| :--- | :---: | :---: | :--- | :--- |
+| **null** | - | - | Bỏ qua | Bỏ qua |
+| **< 0** | Không | Không | Bỏ qua | Bỏ qua |
+| **> 10** | Không | Không | Bỏ qua | Bỏ qua |
+| **0 ≤ điểm < 8** | Có | Không | Tính vào trung bình | Bỏ qua |
+| **8 ≤ điểm ≤ 10** | Có | Có | Tính vào trung bình | Tăng bộ đếm |
 
-**Kịch bản kiểm thử tích hợp (Mixed Scenario):**
-Input hỗn hợp: `[null, 9.0 (R5), -5.0 (R3), 7.5 (R4), 15.0 (R3), 8.0 (R5), null (R2)]`
-
-✅ **Kết quả thực thi:**
-- Hệ thống tự động lọc bỏ các giá trị `null`, `-5.0`, `15.0`.
-- Tính toán trên các giá trị sạch: `9.0`, `7.5`, `8.0`.
-- **Excellent Count:** 2
-- **Valid Average:** 8.167
-
-👉 **Hàm test:** `testDecisionTable_MixedRules_ComplexScenario`
+**Kiểm thử trạng thái danh sách:**
+| Trạng thái danh sách | Kết quả Average | Kết quả Count Excellent |
+| :--- | :---: | :---: |
+| `scores == null` | 0.0 | 0 |
+| Danh sách rỗng | 0.0 | 0 |
+| Chỉ chứa null/ngoài 0-10 | 0.0 | 0 |
+| Có ít nhất một điểm hợp lệ | Trung bình điểm hợp lệ | Số lượng điểm trong [8, 10] |
 
 ### 4. Đồ thị dòng điều khiển (Control Flow Graph - CFG)
 Dưới đây là sơ đồ CFG cho hàm `calculateValidAverage` để minh chứng cho việc bao phủ các luồng logic:
